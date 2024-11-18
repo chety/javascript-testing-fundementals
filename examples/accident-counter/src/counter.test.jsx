@@ -43,9 +43,12 @@ describe('Counter ', () => {
   it('decrements the count when the "Decrement" button is clicked', async () => {
     cleanup();
     render(<Counter initialCount={4} />);
-    expect(screen.getByRole('button', { name: /decrement/i })).toBeEnabled();
 
-    await userEvent.click(screen.getByRole('button', { name: /decrement/i }));
+    const decrementButton = screen.getByRole('button', { name: /decrement/i });
+
+    expect(decrementButton).toBeEnabled();
+
+    await userEvent.click(decrementButton);
     expect(screen.getByTestId('counter-count')).toHaveTextContent('3');
   });
 

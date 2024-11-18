@@ -2,7 +2,8 @@ import { describe, it, expect, vi } from 'vitest';
 import { Character } from './character.js';
 import { Person } from './person.js';
 
-describe('Character', () => {
+//shuffle makes tests running in random order
+describe.shuffle('Character', () => {
   const firstName = 'Grace';
   const lastName = 'Hopper';
   const role = 'Wizard';
@@ -57,5 +58,9 @@ describe('Character', () => {
     expect(rollMock).toHaveBeenCalledTimes(6);
     expect(rollMock).toHaveBeenCalledWith(4, 6);
     console.log(rollMock.mock.results);
+  });
+
+  it('should inherit from Person', () => {
+    expect(character).toBeInstanceOf(Person);
   });
 });

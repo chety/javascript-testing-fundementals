@@ -27,4 +27,32 @@ describe('fetchTestUser tests', () => {
     const user = await fetchUser(1);
     expect(user).toEqual({ id: 1, name: 'Rodik' });
   });
+
+  it('should return the user if the response is OK - without async', () => {
+    global.fetch.mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({ id: 1, name: 'Rodik' }),
+    });
+
+    return expect(fetchUser(1)).resolves.toEqual({ id: 1, name: 'Rodik' });
+  });
 });
+
+describe('vitest hooks', () => {
+  let user;
+  beforeAll(async () => {
+    user = await getUserAsync();
+  });
+
+  it('should get the user', () => {
+    expect(user).toEqual({ id: 1, name: 'Mirko' });
+  });
+});
+
+const getUserAsync = async () => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve({ id: 1, name: 'Mirko' });
+    }, 1000);
+  });
+};
