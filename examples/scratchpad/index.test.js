@@ -1,18 +1,29 @@
-import { test, expect, vi } from 'vitest';
+import { test, expect, vi, describe, beforeAll, afterAll } from 'vitest';
 
-const logSpy = vi.spyOn(console, 'log');
-test('a super simple test', () => {
-  console.log('Chety is awsome');
+describe('Spy tests', () => {
+  let logSpy, randomSpy;
 
-  expect(logSpy).toHaveBeenCalledWith('Chety is awsome');
-  expect(logSpy).toHaveBeenCalledTimes(1);
-  expect(logSpy).toHaveBeenCalledOnce();
+  beforeAll(() => {
+    logSpy = vi.spyOn(console, 'log');
+    randomSpy = vi.spyOn(Math, 'random').mockImplementation(() => 0.9);
+  });
 
-  expect(true).toBe(true);
-});
+  afterAll(() => {
+    vi.restoreAllMocks();
+  });
+  test('a super simple test', () => {
+    console.log('Chety is awsome');
 
-const randomSpy = vi.spyOn(Math, 'random').mockImplementation(() => 0.9);
-test('another super simple test', () => {
-  const randomValue = Math.random();
-  expect(randomValue).toBe(0.9);
+    expect(logSpy).toHaveBeenNthCalledWith(1, 'Chety is awsome');
+    expect(logSpy).toHaveBeenLastCalledWith('Chety is awsome');
+    expect(logSpy).toHaveBeenCalledOnce();
+  });
+
+  test('another super simple test', () => {
+    const randomValue = Math.random();
+
+    expect(randomSpy).toHaveBeenCalledTimes(1);
+    expect(randomSpy).toHaveBeenCalledOnce();
+    expect(randomValue).toBe(0.9);
+  });
 });

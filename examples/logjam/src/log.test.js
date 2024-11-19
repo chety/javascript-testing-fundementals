@@ -11,17 +11,17 @@ describe('logger', () => {
       vi.unstubAllEnvs();
     });
     it('should log to the console', () => {
-      const logMock = vi.spyOn(console, 'log');
+      const logSpy = vi.spyOn(console, 'log');
       log('Hello, world!');
-      expect(logMock).toHaveBeenCalledWith('Hello, world!');
+      expect(logSpy).toHaveBeenCalledWith('Hello, world!');
     });
   });
 
   describe('Production', () => {
     it('should NOT log to the console', () => {
-      const logMock = vi.spyOn(console, 'log');
+      const logSpy = vi.spyOn(console, 'log');
       log('Hello, world!', { mode: 'production' });
-      expect(logMock).not.toHaveBeenCalled();
+      expect(logSpy).not.toHaveBeenCalled();
     });
 
     it('should call sendToServer', () => {

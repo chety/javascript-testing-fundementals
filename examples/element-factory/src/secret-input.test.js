@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom/vitest';
 
 import { createSecretInput } from './secret-input.js';
+import { vi } from 'vitest';
 
 describe('createSecretInput without testing library', () => {
   beforeEach(() => {
@@ -42,24 +43,32 @@ describe('createSecretInput without testing library', () => {
 
 describe('createSecretInput with testing library', () => {
   beforeEach(() => {
-    localStorage.clear();
+    vi.spyOn(localStorage, 'getItem').mockReturnValue('test-secret');
+    vi.spyOn(localStorage, 'setItem');
+    vi.spyOn(localStorage, 'removeItem');
+
     document.body.innerHTML = '';
     document.body.appendChild(createSecretInput());
+  });
+
+  afterAll(() => {
+    vi.restoreAllMocks();
   });
 
   it('should have loaded the secret from localStorage', () => {
     const input = screen.getByLabelText(/secret/i);
 
-    expect(input.value).toBe('');
+    expect(input.value).toBe('test-secret');
   });
 
   it('should save the secret to localStorage', async () => {
     const input = screen.getByLabelText(/secret/i);
     const button = screen.getByRole('button', { name: /store secret/i });
 
+    await userEvent.clear(input);
     await userEvent.type(input, 'agt');
     await userEvent.click(button);
-    expect(localStorage.getItem('secret')).toBe('agt');
+    expect(localStorage.setItem).toHaveBeenCalledWith('secret', 'agt');
   });
 
   it('should clear the secret from localStorage', async () => {
@@ -72,6 +81,6 @@ describe('createSecretInput with testing library', () => {
     const clearButton = screen.getByRole('button', { name: /clear secret/i });
     await userEvent.click(clearButton);
 
-    expect(localStorage.getItem('secret')).toBeNull();
+    expect(localStorage.removeItem).toHaveBeenCalledWith('secret');
   });
 });
