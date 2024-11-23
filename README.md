@@ -1,7 +1,6 @@
 ## Testing Fundamentals Course
 
 This is a companion repository for the [Testing Fundamentals](https://frontendmasters.com/courses/testing/) course on Frontend Masters.
-[![Frontend Masters](https://static.frontendmasters.com/assets/brand/logos/full.png)](https://frontendmasters.com/courses/testing/)
 
 ## Setup Instructions
 
@@ -10,7 +9,7 @@ This is a companion repository for the [Testing Fundamentals](https://frontendma
 Clone this repository and install the dependencies:
 
 ```bash
-git clone https://github.com/stevekinney/introduction-to-testing.git
-cd introduction-to-testing
+git clone https://github.com/chety/javascript-testing-fundementals.git
+cd javascript-testing-fundementals
 npm install
 ```
