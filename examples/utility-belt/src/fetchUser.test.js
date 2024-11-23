@@ -1,3 +1,4 @@
+import { vi } from 'vitest';
 import { fetchUser } from './fetchUser.js';
 
 describe('fetchTestUser tests', () => {
@@ -10,6 +11,12 @@ describe('fetchTestUser tests', () => {
   });
   it('should throw an error if the user ID is missing', async () => {
     await expect(fetchUser()).rejects.toThrow('User ID is required');
+  });
+
+  it('should throw an error if the API is down', async () => {
+    global.fetch.mockRejectedValue(new Error('API is down'));
+    // global.fetch = vi.fn(() => Promise.reject(new Error('API is down')));
+    await expect(fetchUser(1)).rejects.toThrow('API is down');
   });
 
   it('should throw an error if the response is not OK', async () => {
@@ -39,13 +46,18 @@ describe('fetchTestUser tests', () => {
 });
 
 describe('vitest hooks', () => {
-  let user;
-  beforeAll(async () => {
-    user = await getUserAsync();
+  beforeEach(() => {
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
   });
 
   it('should get the user', () => {
-    expect(user).toEqual({ id: 1, name: 'Mirko' });
+    const user = getUserAsync();
+    vi.advanceTimersByTime(5000);
+    expect(user).resolves.toEqual({ id: 1, name: 'Mirko' });
   });
 });
 
@@ -53,6 +65,6 @@ const getUserAsync = async () => {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve({ id: 1, name: 'Mirko' });
-    }, 1000);
+    }, 5000);
   });
 };
