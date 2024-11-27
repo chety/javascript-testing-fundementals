@@ -1,5 +1,4 @@
-import React from 'react';
-import { useReducer, useEffect } from 'react';
+import React, { useReducer, useEffect } from 'react';
 import { reducer } from './reducer';
 
 export const Counter = ({ initialCount = 0 }) => {

@@ -1,11 +1,11 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 
-import { css } from 'css-configuration';
+// import { css } from 'css-configuration';
 
 export default defineConfig({
   plugins: [react()],
-  css,
+  // css,
   test: {
     environment: 'happy-dom',
     globals: true,
