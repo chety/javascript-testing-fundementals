@@ -1,0 +1,46 @@
+# .github/workflows/ci.yml
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Install dependencies in all examples
+        run: |
+          # Find all directories under examples that contain a package.json, excluding node_modules
+          for dir in $(find examples -name "package.json" -not -path "*/node_modules/*" -exec dirname {} \;); do
+            echo "Installing dependencies in $dir"
+            cd $dir
+            npm install
+            cd $GITHUB_WORKSPACE
+          done
+
+      - name: Run all tests
+        run: |
+          # Find all directories under examples that contain a package.json, excluding node_modules
+          for dir in $(find examples -name "package.json" -not -path "*/node_modules/*" -exec dirname {} \;); do
+            echo "Running tests in $dir"
+            cd $dir
+            npm test
+            cd $GITHUB_WORKSPACE
+          done
